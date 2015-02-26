@@ -88,59 +88,52 @@ namespace Bludiste
 
             while (zasobnik.Count > 0)
             {
-                //pozice bunky v poli bludiste
-                Point p = zasobnik.Pop();
+                //pozice bunky v poli bludiste, nevybere ze zasobniku
+                Point p = zasobnik.Peek();
 
-                //dokud je cesta, budou se probouravat bunky. Pokud neni cesta, vybere se bunka ze zasobniku.
-                Boolean jeCesta = true;
-
-                while (jeCesta)
+ 
+                List<Point> nenavstiveno = new List<Point>();
+                //kontrola navstivenosti sousednich bunek
+                //nad bunkou
+                if (p.Y > 0)
                 {
-                    List<Point> nenavstiveno = new List<Point>();
-                    //kontrola navstivenosti sousednich bunek
-                    //nad bunkou
-                    if (p.Y > 0)
-                    {
-                        if (bludiste[p.X, p.Y - 1].jeNedotcena()) nenavstiveno.Add(new Point(p.X, p.Y - 1));
-                    }
-                    //vpravo od bunky
-                    if (p.X < w-1)
-                    {
-                        if (bludiste[p.X + 1, p.Y].jeNedotcena()) nenavstiveno.Add(new Point(p.X + 1, p.Y));
-                    }
-                    //pod bunkou
-                    if (p.Y < h-1)
-                    {
-                        if (bludiste[p.X, p.Y + 1].jeNedotcena()) nenavstiveno.Add(new Point(p.X, p.Y + 1));
-                    }
-                    //vlevo od bunky
-                    if (p.X > 0)
-                    {
-                        if (bludiste[p.X - 1, p.Y].jeNedotcena()) nenavstiveno.Add(new Point(p.X - 1, p.Y));
-                    }
-
-                    //uz neni zadna nenavstivena bunka
-                    if (nenavstiveno.Count == 0) jeCesta = false;
-                    else
-                    {
-                        //vyber jedne nenavstivene bunky kudy povede cesta
-                        int d = r.Next(nenavstiveno.Count);
-                        Point dalsi = nenavstiveno.ElementAt(d);
-                        nenavstiveno.RemoveAt(d);
-                        probourejZed(bludiste, p, dalsi);
-                        probouraneZdi++;
-
-                        //pridani zbylych nenavstivenych bunek do zasobniku
-                        for (int i = 0; i < nenavstiveno.Count; i++)
-                        {
-                            zasobnik.Push(nenavstiveno.ElementAt(i));
-                        }
-
-                        //posun do dalsi bunky
-                        p = dalsi;
-                    }
-
+                    if (bludiste[p.X, p.Y - 1].jeNedotcena()) nenavstiveno.Add(new Point(p.X, p.Y - 1));
                 }
+                //vpravo od bunky
+                if (p.X < w-1)
+                {
+                    if (bludiste[p.X + 1, p.Y].jeNedotcena()) nenavstiveno.Add(new Point(p.X + 1, p.Y));
+                }
+                //pod bunkou
+                if (p.Y < h-1)
+                {
+                    if (bludiste[p.X, p.Y + 1].jeNedotcena()) nenavstiveno.Add(new Point(p.X, p.Y + 1));
+                }
+                //vlevo od bunky
+                if (p.X > 0)
+                {
+                    if (bludiste[p.X - 1, p.Y].jeNedotcena()) nenavstiveno.Add(new Point(p.X - 1, p.Y));
+                }
+
+                //uz neni zadna nenavstivena bunka
+                if (nenavstiveno.Count > 0)
+                { 
+                    //vyber jedne nenavstivene bunky kudy povede cesta
+                    int d = r.Next(nenavstiveno.Count);
+                    Point dalsi = nenavstiveno.ElementAt(d);
+                    nenavstiveno.RemoveAt(d);
+                    probourejZed(bludiste, p, dalsi);
+                    probouraneZdi++;
+
+                    //pridani souseda na zasobnik
+                    zasobnik.Push(dalsi);
+                }
+                //uz neni zadna jina cesty, vybere soucasnou bunku ze zasobniku
+                else
+                {
+                    zasobnik.Pop();
+                }
+
             }
 
             dbgOut("Probourano " + probouraneZdi + " zdi");
