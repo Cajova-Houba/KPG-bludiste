@@ -55,7 +55,7 @@
             this.bGenerujBludiste.Name = "bGenerujBludiste";
             this.bGenerujBludiste.Size = new System.Drawing.Size(112, 45);
             this.bGenerujBludiste.TabIndex = 3;
-            this.bGenerujBludiste.Text = "Generuj bludiště";
+            this.bGenerujBludiste.Text = "Generuj nové bludiště";
             this.bGenerujBludiste.UseVisualStyleBackColor = true;
             this.bGenerujBludiste.Click += new System.EventHandler(this.bGenerujBludiste_Click);
             // 
@@ -77,11 +77,11 @@
             // 
             // bResetBludiste
             // 
-            this.bResetBludiste.Location = new System.Drawing.Point(3, 152);
+            this.bResetBludiste.Location = new System.Drawing.Point(-1, 177);
             this.bResetBludiste.Name = "bResetBludiste";
             this.bResetBludiste.Size = new System.Drawing.Size(112, 45);
             this.bResetBludiste.TabIndex = 6;
-            this.bResetBludiste.Text = "Reset bludiště";
+            this.bResetBludiste.Text = "Znovu";
             this.bResetBludiste.UseVisualStyleBackColor = true;
             this.bResetBludiste.Click += new System.EventHandler(this.resetBludiste);
             // 
