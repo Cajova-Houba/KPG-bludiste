@@ -21,6 +21,11 @@ namespace Bludiste
         public const byte WEST = 3;
 
         /// <summary>
+        /// Indikuje cilovou bunku.
+        /// </summary>
+        private Boolean jeCil;
+
+        /// <summary>
         /// Zdi kolem bunky.
         /// </summary>
         private Boolean[] zdi;
@@ -38,6 +43,19 @@ namespace Bludiste
             get
             {
                 return zdi;
+            }
+        }
+
+        public Boolean cil
+        {
+            set
+            {
+                jeCil = value;
+            }
+
+            get
+            {
+                return jeCil;
             }
         }
 

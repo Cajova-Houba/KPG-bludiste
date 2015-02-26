@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tbVyska = new System.Windows.Forms.TextBox();
             this.tbSirka = new System.Windows.Forms.TextBox();
+            this.scoreBoard = new System.Windows.Forms.TextBox();
             this.zadavaciPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             this.bGenerujBludiste.Location = new System.Drawing.Point(3, 80);
             this.bGenerujBludiste.Name = "bGenerujBludiste";
             this.bGenerujBludiste.Size = new System.Drawing.Size(112, 45);
-            this.bGenerujBludiste.TabIndex = 0;
+            this.bGenerujBludiste.TabIndex = 3;
             this.bGenerujBludiste.Text = "Generuj bludiště";
             this.bGenerujBludiste.UseVisualStyleBackColor = true;
             this.bGenerujBludiste.Click += new System.EventHandler(this.bGenerujBludiste_Click);
@@ -61,6 +62,7 @@
             // zadavaciPanel
             // 
             this.zadavaciPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.zadavaciPanel.Controls.Add(this.scoreBoard);
             this.zadavaciPanel.Controls.Add(this.bResetBludiste);
             this.zadavaciPanel.Controls.Add(this.label3);
             this.zadavaciPanel.Controls.Add(this.label2);
@@ -81,6 +83,7 @@
             this.bResetBludiste.TabIndex = 6;
             this.bResetBludiste.Text = "Reset bludiště";
             this.bResetBludiste.UseVisualStyleBackColor = true;
+            this.bResetBludiste.Click += new System.EventHandler(this.resetBludiste);
             // 
             // label3
             // 
@@ -125,15 +128,26 @@
             this.tbSirka.TabIndex = 1;
             this.tbSirka.Text = "5";
             // 
+            // scoreBoard
+            // 
+            this.scoreBoard.Location = new System.Drawing.Point(3, 228);
+            this.scoreBoard.Multiline = true;
+            this.scoreBoard.Name = "scoreBoard";
+            this.scoreBoard.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.scoreBoard.Size = new System.Drawing.Size(192, 136);
+            this.scoreBoard.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(872, 393);
             this.Controls.Add(this.zadavaciPanel);
             this.Controls.Add(this.krPlocha);
             this.Name = "Form1";
             this.Text = "Bludiště";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.pohybHrace);
             this.zadavaciPanel.ResumeLayout(false);
             this.zadavaciPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -151,6 +165,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bResetBludiste;
+        private System.Windows.Forms.TextBox scoreBoard;
     }
 }
 

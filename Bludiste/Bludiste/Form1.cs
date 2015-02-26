@@ -28,12 +28,20 @@ namespace Bludiste
         private int offx = 10;
         private int offy = 10;
 
+        //hrace prochazejici bludistem
+        private Hrac hrac;
+
+        //pvodni pozice hrace
+        private int origX;
+        private int origY;
+
         public Form1()
         {
             InitializeComponent();
 
             inicBitmapGraf();
             gb = new GeneratorBludiste();
+            this.KeyPreview = true;
         }
 
         /// <summary>
@@ -75,14 +83,53 @@ namespace Bludiste
                 return;
             }
 
+            //generovani bludiste
             this.bludiste = gb.generujPerfektniBludiste(w, h);
+            
+            Random r = new Random();
+
+            //vygeneruje cilovou bunku
+            int cx = r.Next(w);
+            int cy = r.Next(h);
+            bludiste[cx, cy].cil = true;
+
+            //pozice hrace
+            int hx = r.Next(w);
+            int hy = r.Next(h);
+            while (hx == cx && hy == cy)
+            {
+                hx = r.Next(w);
+                hy = r.Next(h);
+            }
+            hrac = new Hrac(hx, hy);
+            origX = hx;
+            origY = hy;
 
             vykresliBludiste();
+            vykresliHrace();
+
+            this.Focus();
         }
 
         private void cleanPanel()
         {
             grafika.FillRectangle(new SolidBrush(Color.White), new Rectangle(0, 0, krPlocha.Width, krPlocha.Height));
+            prekresliPanel();
+        }
+
+        private void vykresliHrace()
+        {
+            if (this.hrac == null) return;
+            int hw = bunkaX - 2;
+            int hh = bunkaY - 2;
+
+            //smazani stare pozice hrace
+            grafika.FillEllipse(new SolidBrush(Color.White), offx + hrac.Xold * bunkaX + 1, offy + hrac.Yold * bunkaY + 1, hw, hh);
+            grafika.DrawEllipse(new Pen(Color.White), offx + hrac.Xold * bunkaX + 1, offy + hrac.Yold * bunkaY + 1, hw, hh);
+
+            //nova pozice
+            grafika.FillEllipse(new SolidBrush(Color.Red), offx + hrac.X * bunkaX + 1, offy + hrac.Y * bunkaY + 1, hw, hh);
+            grafika.DrawEllipse(new Pen(Color.Black), offx + hrac.X * bunkaX + 1, offy + hrac.Y * bunkaY + 1, hw, hh);
             prekresliPanel();
         }
 
@@ -126,6 +173,16 @@ namespace Bludiste
                         grafika.DrawLine(pen, new Point(offx + i * bunkaX, offy + j * bunkaY),
                             new Point(offx + i * bunkaX, offy + (j + 1) * bunkaY));
                     }
+
+                    //vykresleni cile
+                    if (bludiste[i,j].cil)
+                    {
+                        grafika.FillEllipse(new SolidBrush(Color.Yellow), offx + i * bunkaX, offy + j * bunkaY, bunkaX, bunkaY);
+                        grafika.DrawEllipse(new Pen(Color.Green), offx + i * bunkaX, offy + j * bunkaY, bunkaX, bunkaY);
+                        float sx = offx + i * bunkaX + bunkaX / 7f; 
+                        float sy = offy + j * bunkaY + bunkaY / 7f;
+                        grafika.DrawString("C", new Font("SansSerif", 8), new SolidBrush(Color.Black), new PointF(sx,sy));
+                    }
                 }
             }
 
@@ -163,6 +220,71 @@ namespace Bludiste
 
             grp.DrawImage(bmp, rDest, rSource, GraphicsUnit.Pixel);
             grp.Dispose();
+        }
+
+        private void pohybHrace(object sender, KeyPressEventArgs e)
+        {
+            if(this.hrac == null) return;
+            if (bludiste[hrac.X, hrac.Y].cil) return;
+            switch (e.KeyChar)
+            {
+                case 'w':
+                case 'W':
+                    {
+                        if (hrac.Y > 0 && !bludiste[hrac.X,hrac.Y].zed[Bunka.NORTH])
+                        {
+                            hrac.Y = hrac.Y - 1;
+                            hrac.pocetKroku++;
+                        }
+                    }break;
+
+                case 's':
+                case 'S':
+                    {
+                        if (hrac.Y < bludiste.GetLength(1) - 1 && !bludiste[hrac.X, hrac.Y].zed[Bunka.SOUTH])
+                        {
+                            hrac.Y = hrac.Y + 1;
+                            hrac.pocetKroku++;
+                        }
+                    }break;
+
+                case 'a':
+                case 'A':
+                    {
+                        if (hrac.X > 0 && !bludiste[hrac.X, hrac.Y].zed[Bunka.WEST])
+                        {
+                            hrac.X = hrac.X - 1;
+                            hrac.pocetKroku++;
+                        }
+                    }break;
+                
+                case 'd':
+                case 'D':
+                    {
+                        if (hrac.X < bludiste.GetLength(0) - 1 && !bludiste[hrac.X, hrac.Y].zed[Bunka.EAST])
+                        {
+                            hrac.X = hrac.X + 1;
+                            hrac.pocetKroku++;
+                        }
+                    }break;
+            }
+
+            vykresliHrace();
+
+            //je v cili?
+            if (bludiste[hrac.X, hrac.Y].cil)
+            {
+                MessageBox.Show("Cíl! Hráč prošel bludištěm za " + hrac.pocetKroku + " kroků.");
+                scoreBoard.AppendText("Cíle dosaženo po " + hrac.pocetKroku + " krocích.\r\n");
+
+            }
+        }
+
+        private void resetBludiste(object sender, EventArgs e)
+        {
+            hrac = new Hrac(origX, origY);
+            vykresliBludiste();
+            vykresliHrace();
         }
     }
 }

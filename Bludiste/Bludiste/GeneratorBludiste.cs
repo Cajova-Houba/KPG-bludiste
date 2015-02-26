@@ -136,17 +136,7 @@ namespace Bludiste
 
             }
 
-            dbgOut("Probourano " + probouraneZdi + " zdi");
-
             return bludiste;
-        }
-
-        private void dbgOut(String msg)
-        {
-            if (DBG)
-            {
-                Console.WriteLine(DateTime.Now+": "+msg);
-            }
         }
 
     }
