@@ -1,0 +1,9 @@
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\bin\Debug\Bludiste.exe.config
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\bin\Debug\Bludiste.exe
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\bin\Debug\Bludiste.pdb
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.csprojResolveAssemblyReference.cache
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.Form1.resources
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.Properties.Resources.resources
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.csproj.GenerateResource.Cache
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.exe
+D:\škola\FAV2\sem2\KPG\bludiste\Bludiste\Bludiste\obj\Debug\Bludiste.pdb
