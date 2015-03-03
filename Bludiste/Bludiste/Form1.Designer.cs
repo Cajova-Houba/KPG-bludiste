@@ -31,13 +31,15 @@
             this.krPlocha = new System.Windows.Forms.Panel();
             this.bGenerujBludiste = new System.Windows.Forms.Button();
             this.zadavaciPanel = new System.Windows.Forms.Panel();
+            this.bProjdiBludiste = new System.Windows.Forms.Button();
+            this.cbZobrazStopu = new System.Windows.Forms.CheckBox();
+            this.scoreBoard = new System.Windows.Forms.TextBox();
             this.bResetBludiste = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tbVyska = new System.Windows.Forms.TextBox();
             this.tbSirka = new System.Windows.Forms.TextBox();
-            this.scoreBoard = new System.Windows.Forms.TextBox();
             this.zadavaciPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +64,8 @@
             // zadavaciPanel
             // 
             this.zadavaciPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.zadavaciPanel.Controls.Add(this.bProjdiBludiste);
+            this.zadavaciPanel.Controls.Add(this.cbZobrazStopu);
             this.zadavaciPanel.Controls.Add(this.scoreBoard);
             this.zadavaciPanel.Controls.Add(this.bResetBludiste);
             this.zadavaciPanel.Controls.Add(this.label3);
@@ -72,16 +76,45 @@
             this.zadavaciPanel.Controls.Add(this.bGenerujBludiste);
             this.zadavaciPanel.Location = new System.Drawing.Point(12, 12);
             this.zadavaciPanel.Name = "zadavaciPanel";
-            this.zadavaciPanel.Size = new System.Drawing.Size(200, 369);
+            this.zadavaciPanel.Size = new System.Drawing.Size(200, 426);
             this.zadavaciPanel.TabIndex = 1;
+            // 
+            // bProjdiBludiste
+            // 
+            this.bProjdiBludiste.Location = new System.Drawing.Point(3, 131);
+            this.bProjdiBludiste.Name = "bProjdiBludiste";
+            this.bProjdiBludiste.Size = new System.Drawing.Size(112, 45);
+            this.bProjdiBludiste.TabIndex = 9;
+            this.bProjdiBludiste.Text = "Projdi bludiště (DFS)";
+            this.bProjdiBludiste.UseVisualStyleBackColor = true;
+            this.bProjdiBludiste.Click += new System.EventHandler(this.pruchodBludistem);
+            // 
+            // cbZobrazStopu
+            // 
+            this.cbZobrazStopu.AutoSize = true;
+            this.cbZobrazStopu.Location = new System.Drawing.Point(-1, 211);
+            this.cbZobrazStopu.Name = "cbZobrazStopu";
+            this.cbZobrazStopu.Size = new System.Drawing.Size(88, 17);
+            this.cbZobrazStopu.TabIndex = 8;
+            this.cbZobrazStopu.Text = "Zobraz stopu";
+            this.cbZobrazStopu.UseVisualStyleBackColor = true;
+            // 
+            // scoreBoard
+            // 
+            this.scoreBoard.Location = new System.Drawing.Point(-1, 285);
+            this.scoreBoard.Multiline = true;
+            this.scoreBoard.Name = "scoreBoard";
+            this.scoreBoard.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.scoreBoard.Size = new System.Drawing.Size(192, 136);
+            this.scoreBoard.TabIndex = 7;
             // 
             // bResetBludiste
             // 
-            this.bResetBludiste.Location = new System.Drawing.Point(-1, 177);
+            this.bResetBludiste.Location = new System.Drawing.Point(-1, 234);
             this.bResetBludiste.Name = "bResetBludiste";
             this.bResetBludiste.Size = new System.Drawing.Size(112, 45);
             this.bResetBludiste.TabIndex = 6;
-            this.bResetBludiste.Text = "Znovu";
+            this.bResetBludiste.Text = "Reset";
             this.bResetBludiste.UseVisualStyleBackColor = true;
             this.bResetBludiste.Click += new System.EventHandler(this.resetBludiste);
             // 
@@ -128,21 +161,12 @@
             this.tbSirka.TabIndex = 1;
             this.tbSirka.Text = "5";
             // 
-            // scoreBoard
-            // 
-            this.scoreBoard.Location = new System.Drawing.Point(3, 228);
-            this.scoreBoard.Multiline = true;
-            this.scoreBoard.Name = "scoreBoard";
-            this.scoreBoard.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.scoreBoard.Size = new System.Drawing.Size(192, 136);
-            this.scoreBoard.TabIndex = 7;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(872, 393);
+            this.ClientSize = new System.Drawing.Size(872, 450);
             this.Controls.Add(this.zadavaciPanel);
             this.Controls.Add(this.krPlocha);
             this.Name = "Form1";
@@ -166,6 +190,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bResetBludiste;
         private System.Windows.Forms.TextBox scoreBoard;
+        private System.Windows.Forms.CheckBox cbZobrazStopu;
+        private System.Windows.Forms.Button bProjdiBludiste;
     }
 }
 

@@ -35,6 +35,9 @@ namespace Bludiste
         private int origX;
         private int origY;
 
+        //je hrac v cili?
+        private Boolean vCili;
+
         public Form1()
         {
             InitializeComponent();
@@ -105,6 +108,9 @@ namespace Bludiste
             origX = hx;
             origY = hy;
 
+            //neni v cili
+            vCili = false;
+
             vykresliBludiste();
             vykresliHrace();
 
@@ -131,6 +137,9 @@ namespace Bludiste
             grafika.FillEllipse(new SolidBrush(Color.Red), offx + hrac.X * bunkaX + 1, offy + hrac.Y * bunkaY + 1, hw, hh);
             grafika.DrawEllipse(new Pen(Color.Black), offx + hrac.X * bunkaX + 1, offy + hrac.Y * bunkaY + 1, hw, hh);
             prekresliPanel();
+
+            //stopa
+            kresliStopu();
         }
 
         /// <summary>
@@ -138,6 +147,7 @@ namespace Bludiste
         /// </summary>
         private void vykresliBludiste()
         {
+            if (bludiste == null) return;
             krPlocha.Width = offx * 2 + bludiste.GetLength(0) * bunkaX+1;
             krPlocha.Height = offy * 2 + bludiste.GetLength(1) * bunkaY+1;
             inicBitmapGraf();
@@ -222,21 +232,34 @@ namespace Bludiste
             grp.Dispose();
         }
 
-        private void pohybHrace(object sender, KeyPressEventArgs e)
+        private void kresliStopu()
         {
-            if(this.hrac == null) return;
-            if (bludiste[hrac.X, hrac.Y].cil) return;
-            switch (e.KeyChar)
+            if (!cbZobrazStopu.Checked) return;
+            int hxo = offx + hrac.Xold * bunkaX + bunkaX / 2;
+            int hyo = offy + hrac.Yold * bunkaY + bunkaY / 2;
+            int hx = offx + hrac.X * bunkaX + bunkaX / 2;
+            int hy = offy + hrac.Y * bunkaY + bunkaY / 2;
+
+            grafika.DrawLine(new Pen(Color.Red),hxo,hyo,hx,hy);
+        }
+
+        /// <summary>
+        /// Podle zadaneho znaku (w,s,a,d) pohne s hracem.
+        /// </summary>
+        /// <param name="znak">Smer pohybu.</param>
+        private void pohniHracem(char znak)
+        {
+            switch (znak)
             {
                 case 'w':
                 case 'W':
                     {
-                        if (hrac.Y > 0 && !bludiste[hrac.X,hrac.Y].zed[Bunka.NORTH])
+                        if (hrac.Y > 0 && !bludiste[hrac.X, hrac.Y].zed[Bunka.NORTH])
                         {
                             hrac.Y = hrac.Y - 1;
                             hrac.pocetKroku++;
                         }
-                    }break;
+                    } break;
 
                 case 's':
                 case 'S':
@@ -246,7 +269,7 @@ namespace Bludiste
                             hrac.Y = hrac.Y + 1;
                             hrac.pocetKroku++;
                         }
-                    }break;
+                    } break;
 
                 case 'a':
                 case 'A':
@@ -256,8 +279,8 @@ namespace Bludiste
                             hrac.X = hrac.X - 1;
                             hrac.pocetKroku++;
                         }
-                    }break;
-                
+                    } break;
+
                 case 'd':
                 case 'D':
                     {
@@ -266,13 +289,23 @@ namespace Bludiste
                             hrac.X = hrac.X + 1;
                             hrac.pocetKroku++;
                         }
-                    }break;
+                    } break;
             }
+
+            if (bludiste[hrac.X, hrac.Y].cil) vCili = true;
+        }
+
+        private void pohybHrace(object sender, KeyPressEventArgs e)
+        {
+            if(this.hrac == null) return;
+            if (bludiste[hrac.X, hrac.Y].cil) return;
+
+            pohniHracem(e.KeyChar);
 
             vykresliHrace();
 
             //je v cili?
-            if (bludiste[hrac.X, hrac.Y].cil)
+            if (vCili)
             {
                 MessageBox.Show("Cíl! Hráč prošel bludištěm za " + hrac.pocetKroku + " kroků.");
                 scoreBoard.AppendText("Cíle dosaženo po " + hrac.pocetKroku + " krocích.\r\n");
@@ -282,9 +315,128 @@ namespace Bludiste
 
         private void resetBludiste(object sender, EventArgs e)
         {
+            if (bludiste == null) return;
             hrac = new Hrac(origX, origY);
+            vCili = false;
+
+            //vsechny bunky bludiste jsou neobjevene
+            for (int i = 0; i < bludiste.GetLength(0); i++)
+            {
+                for (int j = 0; j < bludiste.GetLength(1); j++)
+                {
+                    bludiste[i, j].stav = Bunka.OTEVRENO;
+                }
+            }
+
             vykresliBludiste();
             vykresliHrace();
+        }
+
+        private void pruchodBludistem(object sender, EventArgs e)
+        {
+            if (bludiste == null || vCili) return;
+
+            //start od pozice hrace
+            DFSpruchod(hrac.X, hrac.Y);
+        }
+
+        /// <summary>
+        /// Rekurzivni metoda. Zavola se na promennou bludiste. Bunku na kterou se bude metoda volat
+        /// udavaji souradnice i,j
+        /// </summary>
+        /// <param name="i">X souradnice</param>
+        /// <param name="j">Y souradnice</param>
+        private void DFSpruchod(int i, int j)
+        {
+            bludiste[i,j].stav = Bunka.NAVSTIVENO;
+            vykresliHrace();
+
+
+            //cil?
+            if (bludiste[i, j].cil)
+            {
+                vCili = true;
+                return;
+            }
+
+            //vsichni sousedi bunky
+            //na severu neni zed a bunka na severu jeste nebyla navstivena
+            if (!bludiste[i, j].zed[Bunka.NORTH])
+            {
+                if (bludiste[i, j - 1].stav == Bunka.OTEVRENO)
+                {
+                    //pohyb hrace
+                    pohniHracem('w');
+
+                    //rekurzivni volani na bunku na severu
+                    DFSpruchod(i, j - 1);
+                    if (vCili) return;
+
+                    //krok zpet
+                    pohniHracem('s');
+                    vykresliHrace();
+                }
+            }
+
+            //vychod
+            if (!bludiste[i, j].zed[Bunka.EAST])
+            {
+                if (bludiste[i+1, j].stav == Bunka.OTEVRENO)
+                {
+                    //pohyb hrace
+                    pohniHracem('d');
+
+                    //rekurzivni volani na bunku na vychode
+                    DFSpruchod(i+1, j);
+                    if (vCili) return;
+
+                    //krok zpet
+                    pohniHracem('a');
+                    vykresliHrace();
+                }
+            }
+
+            //jih
+            if (!bludiste[i, j].zed[Bunka.SOUTH])
+            {
+                if (bludiste[i, j+1].stav == Bunka.OTEVRENO)
+                {
+                    //pohyb hrace
+                    pohniHracem('s');
+
+                    //rekurzivni volani na bunku na jihu
+                    DFSpruchod(i, j+1);
+                    if (vCili) return;
+
+                    //krok zpet
+                    pohniHracem('w');
+                    vykresliHrace();
+                }
+            }
+
+            //zapad
+            if (!bludiste[i, j].zed[Bunka.WEST])
+            {
+                if (bludiste[i-1, j].stav == Bunka.OTEVRENO)
+                {
+                    //pohyb hrace
+                    pohniHracem('a');
+
+                    //rekurzivni volani na bunku na zapade
+                    DFSpruchod(i-1, j);
+                    if (vCili) return;
+
+                    //krok zpet
+                    pohniHracem('d');
+                    vykresliHrace();
+                }
+            }
+
+            //vsichni sousedi, bunka se muze zavrit
+            bludiste[i, j].stav = Bunka.ZAVRENO;
+            
+            return;
+
         }
     }
 }

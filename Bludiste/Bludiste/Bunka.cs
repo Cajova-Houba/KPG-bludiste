@@ -20,6 +20,15 @@ namespace Bludiste
         public const byte SOUTH = 2;
         public const byte WEST = 3;
 
+        public const byte OTEVRENO = 0;
+        public const byte NAVSTIVENO = 1;
+        public const byte ZAVRENO = 2;
+
+        /// <summary>
+        /// Slouzi pri prohledavacim algoritmu.
+        /// </summary>
+        public int stav;
+
         /// <summary>
         /// Indikuje cilovou bunku.
         /// </summary>
@@ -66,6 +75,7 @@ namespace Bludiste
             {
                 zdi[i] = true;
             }
+            stav = OTEVRENO;
         }
 
         /// <summary>
